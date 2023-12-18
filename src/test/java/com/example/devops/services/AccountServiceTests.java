@@ -2,8 +2,6 @@ package com.example.devops.services;
 
 import com.example.devops.models.Account;
 import com.example.devops.repositories.AccountRepository;
-import com.example.devops.services.AccountServiceImpl;
-import com.example.devops.services.IAccountService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,23 +27,18 @@ public class AccountServiceTests {
 
     @Test
     public void testCalculateBalance() {
-        // Mocking the account
         Account mockAccount = new Account("Test Account", 100.0, 50.0);
         Mockito.when(accountRepository.findById(1)).thenReturn(Optional.of(mockAccount));
 
-        // Calling the service method
         Double balance = accountService.calculateBalance(1);
 
-        // Verifying the result
-        assertEquals(50.0, balance, 0.01); // Using a delta to account for potential floating-point precision issues
+        assertEquals(50.0, balance, 0.01);
     }
 
     @Test
     public void testCalculateBalanceAccountNotFound() {
-        // Mocking the account repository to return an empty Optional
         Mockito.when(accountRepository.findById(1)).thenReturn(Optional.empty());
 
-        // Verifying that the service method throws the expected exception
         assertThrows(RuntimeException.class, () -> accountService.calculateBalance(1));
     }
 
@@ -55,12 +48,7 @@ public class AccountServiceTests {
         Account mockAccount = new Account("Test Account", 100.0, 50.0);
         Mockito.when(accountRepository.findById(1)).thenReturn(Optional.of(mockAccount));
 
-        // Calling the service method
         Double total = accountService.calculateTotal(1);
-
-        // Verifying the result
-        assertEquals(50.0, total, 0.01); // Using a delta to account for potential floating-point precision issues
+        assertEquals(50.0, total, 0.01);
     }
-
-    // Similar tests for other scenarios...
 }
