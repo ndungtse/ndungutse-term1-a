@@ -22,6 +22,21 @@ public class MathController {
         this.mathOperator = mathOperator;
     }
 
+    @PostMapping("/doMath")
+    public ResponseEntity<CalcResponse> doMath(@RequestBody DoMathRequest request) throws InvalidOperationException, DivisionByZeroException {
+        try {
+            if (request.getOperand2() == 0 && request.getOperation().equals("/")) {
+                throw new DivisionByZeroException("Cannot divide by zero");
+            }
+            double result = mathOperator.doMath(request.getOperand1(), request.getOperand2(), request.getOperation());
+            return ResponseEntity.ok(new CalcResponse(result));
+        } catch (InvalidOperationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CalcResponse("Invalid operation"));
+        } catch (DivisionByZeroException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CalcResponse("Division by zero"));
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<CalcResponse> add(@RequestBody DoMathRequest request) throws InvalidOperationException {
         double result = mathOperator.doMath(request.getOperand1(), request.getOperand2(), request.getOperation());
