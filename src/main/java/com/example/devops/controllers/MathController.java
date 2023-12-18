@@ -51,7 +51,7 @@ public class MathController {
         } catch (InvalidOperationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CalcResponse("Invalid operation"));
         } catch (DivisionByZeroException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CalcResponse("Division by zero"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CalcResponse("Division by zero"));
         }
     }
 }

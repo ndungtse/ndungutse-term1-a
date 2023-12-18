@@ -97,7 +97,7 @@ class MathControllerE2ETests {
         mockMvc.perform(MockMvcRequestBuilders.post("/math/divide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
     }
 
     @Test
