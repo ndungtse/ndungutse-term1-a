@@ -2,6 +2,8 @@ package com.example.devops.controllers;
 
 import com.example.devops.dtos.CalcResponse;
 import com.example.devops.dtos.DoMathRequest;
+import com.example.devops.exceptions.DivisionByZeroException;
+import com.example.devops.exceptions.InvalidOperationException;
 import com.example.devops.services.MathOperatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -90,23 +92,24 @@ class MathControllerE2ETests {
     void testDivideByZeroEndpoint() throws Exception {
         DoMathRequest request = new DoMathRequest(3.0, 0.0, "/");
 
-        when(mathOperator.doMath(3.0, 0.0, "/")).thenThrow(new RuntimeException("Division by zero"));
+        when(mathOperator.doMath(3.0, 0.0, "/")).thenThrow(new InvalidOperationException("Cannot divide by zero"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/math/divide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     void testUnknownOperationEndpoint() throws Exception {
         DoMathRequest request = new DoMathRequest(3.0, 4.0, "%");
 
-        when(mathOperator.doMath(3.0, 4.0, "%")).thenThrow(new RuntimeException("Unknown operation"));
+        when(mathOperator.doMath(3.0, 4.0, "%")).thenThrow(new InvalidOperationException("Unknown operation"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/math/divide")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
+
 }
