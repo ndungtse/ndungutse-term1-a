@@ -18,6 +18,13 @@ public class MathControllerIntegrationTests {
     private TestRestTemplate restTemplate;
 
     @Test
+    public void testDoMath() {
+        DoMathRequest request = new DoMathRequest(10, 20, "+");
+        ResponseEntity<CalcResponse> response = restTemplate.postForEntity("/math/doMath", request, CalcResponse.class);
+        assertEquals(30, response.getBody().getResult(), 0.01);
+    }
+
+    @Test
     public void testAdd() {
         DoMathRequest request = new DoMathRequest(10, 20, "+");
         ResponseEntity<CalcResponse> response = restTemplate.postForEntity("/math/add", request, CalcResponse.class);

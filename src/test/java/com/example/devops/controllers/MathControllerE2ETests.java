@@ -33,6 +33,20 @@ class MathControllerE2ETests {
     private ObjectMapper objectMapper;
 
     @Test
+    void testDoMathEndpoint() throws Exception {
+        DoMathRequest request = new DoMathRequest(3.0, 4.0, "+");
+        CalcResponse response = new CalcResponse(7.0);
+
+        when(mathOperator.doMath(3.0, 4.0, "+")).thenReturn(7.0);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/math/doMath")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.result").value(7.0));
+    }
+
+    @Test
     void testAddEndpoint() throws Exception {
         DoMathRequest request = new DoMathRequest(3.0, 4.0, "+");
         CalcResponse response = new CalcResponse(7.0);
